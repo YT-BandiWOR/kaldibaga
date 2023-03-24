@@ -1,0 +1,66 @@
+.content {
+  color: rgba(255,255,255,.8);
+
+  .text {
+    background: rgba(0,0,0,.2);
+    border-radius: 10px;
+    padding: .5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .title {
+    p {
+      font-size: 2rem;
+    }
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .paragraph {
+
+  }
+
+  .quote {
+    background: rgba(0,0,0,.1);
+    border-left: 3px solid darkcyan;
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .red {
+    @extend .text;
+    p {
+      color: rgba(red, .8);
+    }
+  }
+
+  .green {
+    @extend .text;
+    p {
+      color: rgba(green, .8);
+    }
+  }
+
+  .blue {
+    @extend .text;
+    p {
+      color: rgba(blue, .8);
+    }
+  }
+
+  .yellow {
+    @extend .text;
+    p {
+      color: rgba(yellow, .8);
+    }
+  }
+
+  .hr {
+    align-self: center;
+    width: 80%;
+    height: 3px;
+    color: white;
+  }
+}
