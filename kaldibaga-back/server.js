@@ -1,5 +1,5 @@
-const express = require('express'); //
-const sqlite3 = require('sqlite3').verbose(); //
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { body, validationResult } = require('express-validator');
@@ -11,7 +11,6 @@ app.use(express.json());
 app.use(cors());
 
 const db = new sqlite3.Database('./database.db');
-
 
 const ACCESS_TOKEN_SECRET = 'ACCESS_TOKEN_SECRET';
 const REFRESH_TOKEN_SECRET = 'REFRESH_TOKEN_SECRET';
@@ -30,7 +29,6 @@ db.serialize(() => {
         username TEXT UNIQUE,
         email TEXT UNIQUE,
         password TEXT,
-        accessToken TEXT,
         refreshToken TEXT
     )`);
 
@@ -55,6 +53,8 @@ db.serialize(() => {
     )`);
 });
 
+
+
 const validateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -69,12 +69,8 @@ const validateToken = async (req, res, next) => {
         } catch (error) {
             return res.status(401).json({error: error401_text})
         }
-        const user = await db_get(`SELECT id, username, email FROM users WHERE id = ? AND username = ? AND email = ? AND accessToken = ?`, [decodedAccessToken.id, decodedAccessToken.username, decodedAccessToken.email, token]);
-        if (!user) {
-            return res.status(401).json({ error: error401_text });
-        }
 
-        req.user = user;
+        req.user = decodedAccessToken;
 
         await next();
     } catch (error) {
@@ -130,7 +126,7 @@ app.post('/login', async (req, res) => {
         const accessToken = jwt.sign({ id: user.id, username: user.username, email: user.email }, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRATION });
         const refreshToken = jwt.sign({ id: user.id, username: user.username, email: user.email }, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRATION });
 
-        await db_run(`UPDATE users SET accessToken = ?, refreshToken = ? WHERE id = ?`, [accessToken, refreshToken, user.id]);
+        await db_run(`UPDATE users SET refreshToken = ? WHERE id = ?`, [refreshToken, user.id]);
 
         res.status(201).json({ accessToken, refreshToken });
 
@@ -143,16 +139,21 @@ app.post('/login', async (req, res) => {
 // Обновление токена доступа
 app.post('/refresh', async (req, res) => {
     const { refreshToken } = req.body;
+    const error401_text = 'Недействительный токен обновления.';
     try {
         const user = await db_get(`SELECT * FROM users WHERE refreshToken = ?`, [refreshToken]);
         if (!user) {
-            return res.status(401).json({ error: 'Неверный токен обновления' });
+            return res.status(401).json({ error: error401_text });
         }
 
-        jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
+        let decodedRefreshToken;
+        try {
+            decodedRefreshToken = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
+        } catch (error) {
+            return res.status(401).json({error: error401_text})
+        }
 
         const accessToken = jwt.sign({ id: user.id, username: user.username, email: user.email }, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRATION });
-        await db.run(`UPDATE users SET accessToken = ? WHERE id = ?`, [accessToken, user.id]);
 
         res.status(201).json({ accessToken });
     } catch (error) {
@@ -189,7 +190,8 @@ app.post(
 )
 
 app.post(
-    '/article/list', validateToken,
+    '/article/list',
+    validateToken,
     body('page').isInt(),
     body('limit').isInt(),
     async (req, res) => {
@@ -203,6 +205,24 @@ app.post(
         } catch (e) {
             console.error(e);
             res.status(500).json({error: 'Ошибка при загрузке списка постов.'})
+        }
+    }
+)
+
+app.post(
+    '/article/view', validateToken,
+    body('id').isInt(),
+    async (req, res) => {
+        try {
+            const {id} = req.body;
+
+            const article = await db_get(`SELECT * FROM articles WHERE id = ?`, [id]);
+
+            res.status(200).json({article: article});
+
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({error: 'Ошибка при просмотре поста.'});
         }
     }
 )

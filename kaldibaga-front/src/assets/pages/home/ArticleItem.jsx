@@ -22,7 +22,7 @@ const ArticleItem = ({data}) => {
                 <ArticleContentViewer text={content}/>
             </div>
             <div className={cls.footer}>
-                <GoLink className={cls.view_button}>Смотреть</GoLink>
+                <GoLink to={`/article/${id}`} className={cls.view_button}>Смотреть</GoLink>
             </div>
         </div>
     );

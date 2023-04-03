@@ -24,4 +24,4 @@ const InputField = ({linesState, previewState, titleState}) => {
     )
 };
 
-export default InputField;
+export default React.memo(InputField);

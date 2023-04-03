@@ -13,10 +13,17 @@ const create = (responseState, loadedState, errorState, title, content) => {
     })
 }
 
+const view = (responseState, loadedState, errorState, id) => {
+    getResponse(backEndpoints.url+backEndpoints.article_view, responseState, loadedState, errorState, {
+        id
+    })
+}
+
 
 const article = {
     list,
-    create
+    create,
+    view,
 }
 
 export default article;

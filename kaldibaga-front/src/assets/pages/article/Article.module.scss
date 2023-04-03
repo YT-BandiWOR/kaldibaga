@@ -161,6 +161,129 @@
       color: white;
     }
   }
+
+  .other_settings {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    input[type="file"] {
+      background: rgba(255,255,255,.1);
+      padding: 1rem;
+      border: 2px solid rgba(255,255,255,.1);
+      cursor: pointer;
+
+      border-radius: 0 0 10px 10px;
+      color: white;
+
+      &:hover {
+        background: rgba(255,255,255,.2);
+      }
+    }
+  }
 }
 
+
+.view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 95vw;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95vw;
+    background: rgba(255,255,255,.1);
+    min-height: 5vh;
+    margin-top: 1rem;
+
+    .author {
+
+    }
+
+    .title {
+      &>h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .date {
+
+    }
+  }
+  .title {
+    color: white;
+    font-size: 2rem;
+  }
+
+  .main {
+    background: rgba(255,255,255,.05);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 75vh;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      background: rgba(0,0,0,0.1);
+      width: 2vw;
+      min-width: 20px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,.2);
+      border: 2px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+
+    }
+
+    & > * {
+      width: 90%;
+    }
+  }
+
+  .footer {
+    max-width: 90%;
+    background: rgba(255,255,255,.1);
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    .score {
+      display: flex;
+      cursor: pointer;
+
+      .like_a {
+        padding: .5rem;
+        margin: .5rem;
+        border: 2px solid rgba(0,0,0,0.1);
+        background: rgba(green, .9);
+      }
+
+      .like {
+        padding: .5rem;
+        margin: .5rem;
+        border: 2px solid rgba(0,0,0,0.1);
+        background: rgba(green, .4);
+      }
+
+      .dislike_a {
+        padding: .5rem;
+        margin: .5rem;
+        border: 2px solid rgba(0,0,0,0.1);
+        background: rgba(red, .9);
+      }
+
+      .dislike {
+        padding: .5rem;
+        margin: .5rem;
+        border: 2px solid rgba(0,0,0,0.1);
+        background: rgba(red, .4);
+      }
+    }
+  }
+}
 

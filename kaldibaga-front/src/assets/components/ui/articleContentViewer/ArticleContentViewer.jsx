@@ -17,4 +17,4 @@ const ArticleContentViewer = ({text}) => {
     );
 };
 
-export default ArticleContentViewer;
+export default React.memo(ArticleContentViewer);

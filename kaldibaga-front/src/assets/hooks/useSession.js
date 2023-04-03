@@ -7,12 +7,12 @@ const set = (key, value, ttl) => {
         value: value,
         expiry: now.getTime() + ttl,
     };
-    localStorage.setItem(key, JSON.stringify(item));
+    sessionStorage.setItem(key, JSON.stringify(item));
 }
 
 // Функция для получения значения из localStorage
 const get = (key) => {
-    const itemStr = localStorage.getItem(key);
+    const itemStr = sessionStorage.getItem(key);
     // Если элемент не найден, возвращаем null
     if (!itemStr) {
         return null;
@@ -22,7 +22,7 @@ const get = (key) => {
         const now = new Date();
         // Если срок жизни элемента истек, удаляем его и возвращаем null
         if (now.getTime() > item.expiry) {
-            localStorage.removeItem(key);
+            sessionStorage.removeItem(key);
             return null;
         }
         // Иначе возвращаем значение элемента
@@ -35,13 +35,13 @@ const get = (key) => {
 const pop = (key) => {
     const value = get(key);
     if (value) {
-        localStorage.removeItem(value);
+        sessionStorage.removeItem(value);
     }
     return value;
 }
 
 const remove = (key) => {
-    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
 }
 
 

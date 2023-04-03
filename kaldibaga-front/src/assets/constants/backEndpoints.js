@@ -8,6 +8,7 @@ const backEndpoints = {
 
     article_create: '/article/create',
     article_list: '/article/list',
+    article_view: '/article/view',
 }
 
 const requests_without_tokens = [

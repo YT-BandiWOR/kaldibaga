@@ -44,9 +44,10 @@ const Login = () => {
     }, [])
 
     useEffect(()=>{
-        console.log(response);
+        console.log('response', response);
 
-        if (response.data) {
+        if (response?.data) {
+            console.log('response.data',response.data)
             const {accessToken, refreshToken} = response.data;
             useCookie.set(cookieNames.access_token, accessToken, useCookie.getExpTime(accessToken));
             useStorage.set(storageNames.refresh_token, refreshToken, useCookie.getExpTime(refreshToken));

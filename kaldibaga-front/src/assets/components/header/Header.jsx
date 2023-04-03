@@ -8,22 +8,24 @@ import account from "../../../services/account.js";
 import useStorage from "../../hooks/useStorage.js";
 import storageNames from "../../constants/storageNames.js";
 import useCookie from "../../hooks/useCookie.js";
+import useSession from "../../hooks/useSession.js";
+import sessionNames from "../../constants/sessionNames.js";
+import authSettings from "../../constants/authSettings.js";
+import {Navigate, useNavigate} from "react-router-dom";
 
 const Header = () => {
-    const isMobile = useMemo(()=>window.innerWidth <= 800, [window.innerWidth]);
+    const isMobile = window.innerWidth <= 800;
     const [menuOpened, setMenuOpened] = useState(false);
     const {elements, logoName, loginText, menuCaption} = headerSettings;
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
     const [response, setResponse] = useState(null);
     const [user, setUser] = useState(null);
+    const current_page = window.location.pathname;
+    const navigate = useNavigate();
 
     useEffect(()=>{
-        const storage_account = useStorage.get(storageNames.account);
-
-        if (storage_account) {
-            setUser(JSON.parse(storage_account));
-        } else {
+        if (!user) {
             account.get([response, setResponse], [isLoaded, setIsLoaded], [error, setError]);
         }
     }, [])
@@ -31,9 +33,15 @@ const Header = () => {
     useEffect(()=>{
         if (response) {
             setUser(response.data);
-            useStorage.set(storageNames.account, JSON.stringify(user), useCookie.getExpTime(useStorage.get(storageNames.refresh_token)));
         }
     }, [response])
+
+    useEffect(()=>{
+        if (error && (!(authSettings.pagesWithoutAuth.includes(current_page)))) {
+            alert(error.response.data.error);
+            navigate('/login');
+        }
+    }, [error])
 
     if (isMobile) {
         return (

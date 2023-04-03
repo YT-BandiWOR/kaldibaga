@@ -1,5 +1,6 @@
 import cls from "./Article.module.scss";
 import ArticleContentViewer from "../../components/ui/articleContentViewer/ArticleContentViewer.jsx";
+import React from "react";
 
 
 const ArticlePreview = ({openState, title, content}) => {
@@ -28,4 +29,4 @@ const ArticlePreview = ({openState, title, content}) => {
     }
 }
 
-export default ArticlePreview;
+export default React.memo(ArticlePreview);
